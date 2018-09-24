@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -38,6 +39,7 @@ public class AdminController {
     @Autowired private RokService rokService; 
     @Autowired private PredmetService predmetService; 
     @Autowired private PredmetRokService predmetRokService; 
+    @Autowired private JmsTemplate jmsTemplate; 
     
     @RequestMapping(value = "/userinfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object dajPodatkeTrenutnogKorisnika(Principal principal) {
@@ -83,6 +85,8 @@ public class AdminController {
     			predmetRokSet.add(pr); 
     			predmetRokService.save(pr);
 			}
+    		System.out.println("SENDING JMS MESSAGE");
+    		jmsTemplate.convertAndSend("rok.dezurstva", r.getRokId().toString());
     		return "rokId: " + r.getRokId(); 
     	} catch (Exception e) {
     		return "fail: " + e.getMessage(); 
