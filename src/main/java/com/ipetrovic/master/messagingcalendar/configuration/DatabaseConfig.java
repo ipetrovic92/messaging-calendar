@@ -79,7 +79,7 @@ public class DatabaseConfig {
     @Bean
     PersistenceUnitManager persistenceUnitManager(DataSource datasource) {
         DefaultPersistenceUnitManager persistenceUnitManager = new DefaultPersistenceUnitManager();
-        persistenceUnitManager.setDefaultPersistenceUnitName("calendar");
+        persistenceUnitManager.setDefaultPersistenceUnitName("studentski_kalendar");
         persistenceUnitManager.setDefaultDataSource(datasource);
         persistenceUnitManager.setPackagesToScan("com.ipetrovic.master.messagingcalendar");
         persistenceUnitManager.setSharedCacheMode(SharedCacheMode.DISABLE_SELECTIVE);

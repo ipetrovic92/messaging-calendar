@@ -32,6 +32,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Value("${spring.queries.roles-query}")
     private String rolesQuery;
+    
+    @Value("${security.enable-csrf}")
+    private boolean csrfEnabled;
 
     @Autowired
     @Qualifier("userDetailsService")
@@ -67,6 +70,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
             .logout()
                 .permitAll();
+        
+        if (!csrfEnabled) {
+        	http.csrf().disable();
+        }
     }
 
     @Bean

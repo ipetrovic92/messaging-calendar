@@ -22,16 +22,14 @@ public class MyUserPrincipal implements UserDetails {
     }
 
     public Long getId() {
-        return user.getId();
+        return user.getUserId();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-        for (Role role : user.getRoles()) {
-            authorities.add(new SimpleGrantedAuthority(role.getRole()));
-        }
+        authorities.add(new SimpleGrantedAuthority(user.getRole().getRole()));
         return authorities;
     }
 
