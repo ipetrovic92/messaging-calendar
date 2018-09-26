@@ -18,8 +18,8 @@ public class MogucePrijaveStudentskaSluzbaPK implements Serializable {
 	@Column(name="rok_id", insertable=false, updatable=false, unique=true, nullable=false)
 	private Long rokId;
 
-	@Column(name="broj_indeksa", insertable=false, updatable=false, unique=true, nullable=false, length=255)
-	private String brojIndeksa;
+	@Column(name="broj_indeksa_studenta", insertable=false, updatable=false, unique=true, nullable=false, length=255)
+	private String brojIndeksaStudenta;
 
 	public MogucePrijaveStudentskaSluzbaPK() {
 	}
@@ -35,11 +35,11 @@ public class MogucePrijaveStudentskaSluzbaPK implements Serializable {
 	public void setRokId(Long rokId) {
 		this.rokId = rokId;
 	}
-	public String getBrojIndeksa() {
-		return this.brojIndeksa;
+	public String getBrojIndeksaStudenta() {
+		return this.brojIndeksaStudenta;
 	}
-	public void setBrojIndeksa(String brojIndeksa) {
-		this.brojIndeksa = brojIndeksa;
+	public void setBrojIndeksaStudenta(String brojIndeksaStudenta) {
+		this.brojIndeksaStudenta = brojIndeksaStudenta;
 	}
 
 	public boolean equals(Object other) {
@@ -53,7 +53,7 @@ public class MogucePrijaveStudentskaSluzbaPK implements Serializable {
 		return 
 			this.predmetAkronim.equals(castOther.predmetAkronim)
 			&& this.rokId.equals(castOther.rokId)
-			&& this.brojIndeksa.equals(castOther.brojIndeksa);
+			&& this.brojIndeksaStudenta.equals(castOther.brojIndeksaStudenta);
 	}
 
 	public int hashCode() {
@@ -61,7 +61,7 @@ public class MogucePrijaveStudentskaSluzbaPK implements Serializable {
 		int hash = 17;
 		hash = hash * prime + this.predmetAkronim.hashCode();
 		hash = hash * prime + this.rokId.hashCode();
-		hash = hash * prime + this.brojIndeksa.hashCode();
+		hash = hash * prime + this.brojIndeksaStudenta.hashCode();
 		
 		return hash;
 	}

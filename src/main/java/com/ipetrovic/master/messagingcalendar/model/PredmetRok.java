@@ -2,7 +2,7 @@ package com.ipetrovic.master.messagingcalendar.model;
 
 import java.io.Serializable;
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.Set;
 
 
@@ -19,9 +19,8 @@ public class PredmetRok implements Serializable {
 	@EmbeddedId
 	private PredmetRokPK id;
 
-	@Temporal(TemporalType.TIMESTAMP)
-	@Column(nullable=false)
-	private Date datum;
+	@Column(name="datum_polaganja", nullable=false)
+	private Timestamp datumPolaganja;
 
 	//bi-directional many-to-one association to MogucePrijaveStudent
 	@OneToMany(mappedBy="predmetRok", fetch=FetchType.EAGER)
@@ -56,12 +55,12 @@ public class PredmetRok implements Serializable {
 		this.id = id;
 	}
 
-	public Date getDatum() {
-		return this.datum;
+	public Timestamp getDatumPolaganja() {
+		return this.datumPolaganja;
 	}
 
-	public void setDatum(Date datum) {
-		this.datum = datum;
+	public void setDatumPolaganja(Timestamp datumPolaganja) {
+		this.datumPolaganja = datumPolaganja;
 	}
 
 	public Set<MogucePrijaveStudent> getMogucePrijaveStudents() {

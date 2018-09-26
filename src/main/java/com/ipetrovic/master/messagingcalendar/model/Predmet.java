@@ -16,14 +16,16 @@ public class Predmet implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(unique=true, nullable=false, length=255)
-	private String akronim;
+	@SequenceGenerator(name="PREDMET_AKRONIMPREDMETA_GENERATOR", sequenceName="PREDMET_ID_SEQUENCE")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PREDMET_AKRONIMPREDMETA_GENERATOR")
+	@Column(name="akronim_predmeta", unique=true, nullable=false, length=255)
+	private String akronimPredmeta;
 
 	@Column(name="godina_studija", nullable=false, length=255)
 	private String godinaStudija;
 
-	@Column(nullable=false, length=255)
-	private String naziv;
+	@Column(name="naziv_predmeta", nullable=false, length=255)
+	private String nazivPredmeta;
 
 	@Column(name="tip_predmeta", nullable=false, length=255)
 	private String tipPredmeta;
@@ -46,18 +48,18 @@ public class Predmet implements Serializable {
 	private Set<PredmetRok> predmetRoks;
 
 	//bi-directional many-to-one association to Profesor
-	@OneToMany(mappedBy="predmetBean", fetch=FetchType.EAGER)
+	@OneToMany(mappedBy="predmet", fetch=FetchType.EAGER)
 	private Set<Profesor> profesors;
 
 	public Predmet() {
 	}
 
-	public String getAkronim() {
-		return this.akronim;
+	public String getAkronimPredmeta() {
+		return this.akronimPredmeta;
 	}
 
-	public void setAkronim(String akronim) {
-		this.akronim = akronim;
+	public void setAkronimPredmeta(String akronimPredmeta) {
+		this.akronimPredmeta = akronimPredmeta;
 	}
 
 	public String getGodinaStudija() {
@@ -68,12 +70,12 @@ public class Predmet implements Serializable {
 		this.godinaStudija = godinaStudija;
 	}
 
-	public String getNaziv() {
-		return this.naziv;
+	public String getNazivPredmeta() {
+		return this.nazivPredmeta;
 	}
 
-	public void setNaziv(String naziv) {
-		this.naziv = naziv;
+	public void setNazivPredmeta(String nazivPredmeta) {
+		this.nazivPredmeta = nazivPredmeta;
 	}
 
 	public String getTipPredmeta() {
@@ -124,14 +126,14 @@ public class Predmet implements Serializable {
 
 	public Profesor addProfesor(Profesor profesor) {
 		getProfesors().add(profesor);
-		profesor.setPredmetBean(this);
+		profesor.setPredmet(this);
 
 		return profesor;
 	}
 
 	public Profesor removeProfesor(Profesor profesor) {
 		getProfesors().remove(profesor);
-		profesor.setPredmetBean(null);
+		profesor.setPredmet(null);
 
 		return profesor;
 	}

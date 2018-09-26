@@ -8,46 +8,45 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import com.ipetrovic.master.messagingcalendar.model.Role;
-import com.ipetrovic.master.messagingcalendar.model.User;
+import com.ipetrovic.master.messagingcalendar.model.Korisnik;
 
 
 public class MyUserPrincipal implements UserDetails {
 
     private static final long serialVersionUID = -5694665634575424841L;
-    private User user;
+    private Korisnik korisnik;
 
-    public MyUserPrincipal(User user) {
-        this.user = user;
+    public MyUserPrincipal(Korisnik korisnik) {
+        this.korisnik = korisnik;
     }
 
     public Long getId() {
-        return user.getUserId();
+        return korisnik.getKorisnikId();
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 
-        authorities.add(new SimpleGrantedAuthority(user.getRole().getRole()));
+        authorities.add(new SimpleGrantedAuthority(korisnik.getRola().getNazivRole()));
         return authorities;
     }
 
     @Override
     public String getPassword() {
-        return user.getPassword();
+        return korisnik.getLozinka(); 
     }
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return korisnik.getKorisnickoIme(); 
     }
 
-    public User getUser() {
-        return user;
-    }
+    public Korisnik getKorisnik() {
+		return korisnik;
+	}
 
-    @Override
+	@Override
     public boolean isAccountNonExpired() {
         // TODO Auto-generated method stub
         return true;

@@ -8,23 +8,22 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ipetrovic.master.messagingcalendar.configuration.MyUserPrincipal;
-import com.ipetrovic.master.messagingcalendar.model.User;
+import com.ipetrovic.master.messagingcalendar.model.Korisnik;
 
-@Service("userDetailsService")
+@Service("customUserDetailsService")
 public class CustomUserDetailsService implements UserDetailsService {
 
-	@Autowired
-	private UserService adminService;
-
+	@Autowired private KorisnikService korisnikService; 
+	
 	@Override
 	@Transactional(readOnly = true)
-	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		User admin = adminService.findUserByEmail(email);
-		if (admin == null) {
-			throw new UsernameNotFoundException("Username not found");
+	public UserDetails loadUserByUsername(String korisnickoIme) throws UsernameNotFoundException {
+		Korisnik korisnik = korisnikService.pronadjiKorisnika(korisnickoIme); 
+		if (korisnik == null) {
+			throw new UsernameNotFoundException("Korisnik sa korisnickim imenom \"" + korisnickoIme + "\" nije pronadjen. ");
 		}
 
-		return new MyUserPrincipal(admin);
+		return new MyUserPrincipal(korisnik);
 	}
 
 }

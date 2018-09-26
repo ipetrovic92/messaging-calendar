@@ -16,20 +16,26 @@ public class Profesor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@SequenceGenerator(name="PROFESOR_PROFESORID_GENERATOR", sequenceName="PROFESOR_ID_SEQUENCE")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="PROFESOR_PROFESORID_GENERATOR")
 	@Column(name="profesor_id", unique=true, nullable=false)
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long profesorId;
 
-	@Column(nullable=false, length=255)
-	private String ime;
+	@Column(name="ime_profesora", nullable=false, length=255)
+	private String imeProfesora;
 
-	@Column(nullable=false, length=255)
-	private String prezime;
+	@Column(name="prezime_profesora", nullable=false, length=255)
+	private String prezimeProfesora;
+
+	//bi-directional many-to-one association to Korisnik
+	@ManyToOne
+	@JoinColumn(name="korisnik_id", nullable=false)
+	private Korisnik korisnik;
 
 	//bi-directional many-to-one association to Predmet
 	@ManyToOne
-	@JoinColumn(name="predmet", nullable=false)
-	private Predmet predmetBean;
+	@JoinColumn(name="akronim_predmeta")
+	private Predmet predmet;
 
 	//bi-directional many-to-many association to PredmetRok
 	@ManyToMany(fetch=FetchType.EAGER)
@@ -45,11 +51,6 @@ public class Profesor implements Serializable {
 		)
 	private Set<PredmetRok> predmetRoks;
 
-	//bi-directional many-to-one association to Role
-	@ManyToOne
-	@JoinColumn(name="rola", nullable=false)
-	private Role role;
-
 	public Profesor() {
 	}
 
@@ -61,28 +62,36 @@ public class Profesor implements Serializable {
 		this.profesorId = profesorId;
 	}
 
-	public String getIme() {
-		return this.ime;
+	public String getImeProfesora() {
+		return this.imeProfesora;
 	}
 
-	public void setIme(String ime) {
-		this.ime = ime;
+	public void setImeProfesora(String imeProfesora) {
+		this.imeProfesora = imeProfesora;
 	}
 
-	public String getPrezime() {
-		return this.prezime;
+	public String getPrezimeProfesora() {
+		return this.prezimeProfesora;
 	}
 
-	public void setPrezime(String prezime) {
-		this.prezime = prezime;
+	public void setPrezimeProfesora(String prezimeProfesora) {
+		this.prezimeProfesora = prezimeProfesora;
 	}
 
-	public Predmet getPredmetBean() {
-		return this.predmetBean;
+	public Korisnik getKorisnik() {
+		return this.korisnik;
 	}
 
-	public void setPredmetBean(Predmet predmetBean) {
-		this.predmetBean = predmetBean;
+	public void setKorisnik(Korisnik korisnik) {
+		this.korisnik = korisnik;
+	}
+
+	public Predmet getPredmet() {
+		return this.predmet;
+	}
+
+	public void setPredmet(Predmet predmet) {
+		this.predmet = predmet;
 	}
 
 	public Set<PredmetRok> getPredmetRoks() {
@@ -91,14 +100,6 @@ public class Profesor implements Serializable {
 
 	public void setPredmetRoks(Set<PredmetRok> predmetRoks) {
 		this.predmetRoks = predmetRoks;
-	}
-
-	public Role getRole() {
-		return this.role;
-	}
-
-	public void setRole(Role role) {
-		this.role = role;
 	}
 
 }

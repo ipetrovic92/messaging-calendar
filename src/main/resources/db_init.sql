@@ -10,3 +10,7 @@ insert into user_event (event_id, user_id) values (2, 1);
 insert into user_event (event_id, user_id) values (3, 1);
 
 alter sequence hibernate_sequence restart with 10;
+
+insert into rola (naziv_role) values ('ADMIN'), ('PROFESOR'), ('STUDENT');
+
+insert into korisnik (korisnicko_ime, lozinka, rola_id) values ('admin', 'admin', 1);

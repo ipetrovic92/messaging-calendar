@@ -28,7 +28,7 @@ public class RokDao extends Dao<Rok, Long>{
 		
 		Rok r = new Rok(); 
 		r.setRokId(((BigInteger) result[0]).longValue());
-		r.setNaziv((String) result[1]);
+		r.setNazivRoka((String) result[1]);
 		r.setGodina(((BigInteger) result[2]).longValue());
 		
 		

@@ -10,7 +10,7 @@ import com.ipetrovic.master.messagingcalendar.dao.Dao;
 @Transactional
 public abstract class Service<T, ID extends Serializable> {
 
-    private Dao<T, ID> dao;
+    protected Dao<T, ID> dao;
 
     public Service(Dao<T, ID> dao) {
         this.dao = dao;

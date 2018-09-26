@@ -10,10 +10,12 @@ import com.ipetrovic.master.messagingcalendar.model.PredmetRokPK;
 @Service
 public class PredmetRokService extends com.ipetrovic.master.messagingcalendar.service.Service<PredmetRok, PredmetRokPK>{
 
-	@Autowired PredmetRokDao predmetRokDao; 
+	private PredmetRokDao dao; 
 	
-	public PredmetRokService(PredmetRokDao predmetRokDao) {
-		super(predmetRokDao);
+	@Autowired 
+	public PredmetRokService(PredmetRokDao dao) {
+		super(dao);
+		this.dao = dao; 
 	}
 
 }

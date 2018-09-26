@@ -16,14 +16,16 @@ public class Student implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@Column(name="broj_indeksa", unique=true, nullable=false, length=255)
-	private String brojIndeksa;
+	@SequenceGenerator(name="STUDENT_BROJINDEKSASTUDENTA_GENERATOR", sequenceName="STUDENT_ID_SEQUENCE")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="STUDENT_BROJINDEKSASTUDENTA_GENERATOR")
+	@Column(name="broj_indeksa_studenta", unique=true, nullable=false, length=255)
+	private String brojIndeksaStudenta;
 
-	@Column(nullable=false, length=255)
-	private String ime;
+	@Column(name="ime_studenta", nullable=false, length=255)
+	private String imeStudenta;
 
-	@Column(nullable=false, length=255)
-	private String prezime;
+	@Column(name="prezime_studenta", nullable=false, length=255)
+	private String prezimeStudenta;
 
 	@Column(name="studijski_smer", nullable=false, length=255)
 	private String studijskiSmer;
@@ -43,36 +45,36 @@ public class Student implements Serializable {
 	@ManyToMany(mappedBy="students", fetch=FetchType.EAGER)
 	private Set<Predmet> predmets;
 
-	//bi-directional many-to-one association to Role
+	//bi-directional many-to-one association to Korisnik
 	@ManyToOne
-	@JoinColumn(name="rola", nullable=false)
-	private Role role;
+	@JoinColumn(name="korisnik_id", nullable=false)
+	private Korisnik korisnik;
 
 	public Student() {
 	}
 
-	public String getBrojIndeksa() {
-		return this.brojIndeksa;
+	public String getBrojIndeksaStudenta() {
+		return this.brojIndeksaStudenta;
 	}
 
-	public void setBrojIndeksa(String brojIndeksa) {
-		this.brojIndeksa = brojIndeksa;
+	public void setBrojIndeksaStudenta(String brojIndeksaStudenta) {
+		this.brojIndeksaStudenta = brojIndeksaStudenta;
 	}
 
-	public String getIme() {
-		return this.ime;
+	public String getImeStudenta() {
+		return this.imeStudenta;
 	}
 
-	public void setIme(String ime) {
-		this.ime = ime;
+	public void setImeStudenta(String imeStudenta) {
+		this.imeStudenta = imeStudenta;
 	}
 
-	public String getPrezime() {
-		return this.prezime;
+	public String getPrezimeStudenta() {
+		return this.prezimeStudenta;
 	}
 
-	public void setPrezime(String prezime) {
-		this.prezime = prezime;
+	public void setPrezimeStudenta(String prezimeStudenta) {
+		this.prezimeStudenta = prezimeStudenta;
 	}
 
 	public String getStudijskiSmer() {
@@ -143,12 +145,12 @@ public class Student implements Serializable {
 		this.predmets = predmets;
 	}
 
-	public Role getRole() {
-		return this.role;
+	public Korisnik getKorisnik() {
+		return this.korisnik;
 	}
 
-	public void setRole(Role role) {
-		this.role = role;
+	public void setKorisnik(Korisnik korisnik) {
+		this.korisnik = korisnik;
 	}
 
 }

@@ -13,10 +13,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 @Configuration
@@ -27,31 +25,47 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Qualifier("datasource")
     private DataSource datasource;
 
-    @Value("${spring.queries.users-query}")
+    @Value("${messaging-callendar.queries.users-query}")
     private String usersQuery;
 
-    @Value("${spring.queries.roles-query}")
+    @Value("${messaging-callendar.queries.roles-query}")
     private String rolesQuery;
     
     @Value("${security.enable-csrf}")
     private boolean csrfEnabled;
 
     @Autowired
-    @Qualifier("userDetailsService")
+    @Qualifier("customUserDetailsService")
     UserDetailsService userDetailsService;
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
         authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(customPasswordEncoder());
         return authProvider;
     }
-	
+    
+    @Bean
+    public PasswordEncoder customPasswordEncoder() {
+    	return new PasswordEncoder() {
+			
+			@Override
+			public boolean matches(CharSequence rawPassword, String encodedPassword) {
+				return rawPassword.toString().equals(encodedPassword); 
+			}
+			
+			@Override
+			public String encode(CharSequence rawPassword) {
+				return rawPassword.toString(); 
+			}
+		};
+    }
 
     @Override
+    @Autowired
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.authenticationProvider(authenticationProvider());
-        auth.jdbcAuthentication().passwordEncoder(NoOpPasswordEncoder.getInstance())
+        auth.authenticationProvider(authenticationProvider()).jdbcAuthentication().passwordEncoder(customPasswordEncoder())
             .usersByUsernameQuery(usersQuery)
             .authoritiesByUsernameQuery(rolesQuery)
             .dataSource(datasource);

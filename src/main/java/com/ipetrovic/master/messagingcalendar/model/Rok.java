@@ -16,15 +16,16 @@ public class Rok implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	@Id
+	@SequenceGenerator(name="ROK_ROKID_GENERATOR", sequenceName="ROK_ID_SEQUENCE")
+	@GeneratedValue(strategy=GenerationType.SEQUENCE, generator="ROK_ROKID_GENERATOR")
 	@Column(name="rok_id", unique=true, nullable=false)
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long rokId;
 
 	@Column(nullable=false)
 	private Long godina;
 
-	@Column(nullable=false, length=255)
-	private String naziv;
+	@Column(name="naziv_roka", nullable=false, length=255)
+	private String nazivRoka;
 
 	//bi-directional many-to-one association to PredmetRok
 	@OneToMany(mappedBy="rok", fetch=FetchType.EAGER)
@@ -49,12 +50,12 @@ public class Rok implements Serializable {
 		this.godina = godina;
 	}
 
-	public String getNaziv() {
-		return this.naziv;
+	public String getNazivRoka() {
+		return this.nazivRoka;
 	}
 
-	public void setNaziv(String naziv) {
-		this.naziv = naziv;
+	public void setNazivRoka(String nazivRoka) {
+		this.nazivRoka = nazivRoka;
 	}
 
 	public Set<PredmetRok> getPredmetRoks() {

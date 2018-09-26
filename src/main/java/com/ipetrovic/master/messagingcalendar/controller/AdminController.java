@@ -1,9 +1,9 @@
 package com.ipetrovic.master.messagingcalendar.controller;
 
 import java.security.Principal;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -19,15 +19,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ipetrovic.master.messagingcalendar.model.Korisnik;
 import com.ipetrovic.master.messagingcalendar.model.Predmet;
 import com.ipetrovic.master.messagingcalendar.model.PredmetRok;
 import com.ipetrovic.master.messagingcalendar.model.PredmetRokPK;
 import com.ipetrovic.master.messagingcalendar.model.Rok;
-import com.ipetrovic.master.messagingcalendar.model.User;
+import com.ipetrovic.master.messagingcalendar.service.KorisnikService;
 import com.ipetrovic.master.messagingcalendar.service.PredmetRokService;
 import com.ipetrovic.master.messagingcalendar.service.PredmetService;
 import com.ipetrovic.master.messagingcalendar.service.RokService;
-import com.ipetrovic.master.messagingcalendar.service.UserService;
 
 @RestController
 @RequestMapping("rest")
@@ -35,7 +35,7 @@ public class AdminController {
 	
 	private int ispitRokCount; 
 	
-    @Autowired private UserService userService;
+    @Autowired private KorisnikService korisnikService;
     @Autowired private RokService rokService; 
     @Autowired private PredmetService predmetService; 
     @Autowired private PredmetRokService predmetRokService; 
@@ -43,16 +43,16 @@ public class AdminController {
     
     @RequestMapping(value = "/userinfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object dajPodatkeTrenutnogKorisnika(Principal principal) {
-        User u = userService.findUserByEmail(principal.getName());
+        Korisnik u = korisnikService.pronadjiKorisnika(principal.getName()); 
         
         List<Object> result = new ArrayList<>();
         
         Map<String, Object> userInfo = new HashMap<>();
-        userInfo.put("user_id", u.getUserId()); 
-        userInfo.put("username", u.getUsername()); 
-        userInfo.put("password", u.getPassword()); 
-        userInfo.put("rola_id", u.getRole().getId()); 
-        userInfo.put("rola", u.getRole().getRole()); 
+        userInfo.put("korisnik_id", u.getKorisnikId()); 
+        userInfo.put("korisnicko_ime", u.getKorisnickoIme()); 
+        userInfo.put("lozinka", u.getLozinka()); 
+        userInfo.put("rola_id", u.getRola().getRolaId()); 
+        userInfo.put("naziv_role", u.getRola().getNazivRole()); 
         result.add(userInfo); 
         
         return result;
@@ -63,7 +63,7 @@ public class AdminController {
     	Rok r = new Rok(); 
     	String nazivRoka = (String) data.get("naziv"); 
     	Long godinaRoka = ((Integer) data.get("godina")).longValue(); 
-    	r.setNaziv(nazivRoka);
+    	r.setNazivRoka(nazivRoka);
     	r.setGodina(godinaRoka);
     	
     	try {
@@ -73,14 +73,14 @@ public class AdminController {
     		Set<PredmetRok> predmetRokSet = new HashSet<>(); 
     		for (Predmet predmet : listaSvihPredmeta) {
     			PredmetRokPK prPk = new PredmetRokPK(); 
-    			prPk.setPredmetAkronim(predmet.getAkronim());
+    			prPk.setPredmetAkronim(predmet.getAkronimPredmeta()); 
     			prPk.setRokId(r.getRokId());
     			
     			
     			PredmetRok pr = new PredmetRok(); 
     			pr.setId(prPk);
     			pr.setPredmet(predmet);
-    			pr.setDatum(dajDatumIspita(nazivRoka, godinaRoka));
+    			pr.setDatumPolaganja(dajDatumIspita(nazivRoka, godinaRoka));
     			pr.setRok(r);
     			predmetRokSet.add(pr); 
     			predmetRokService.save(pr);
@@ -100,9 +100,9 @@ public class AdminController {
     	String godinaStudijaPredmeta = (String) data.get("godinaStudija");
     	String nazivPredmeta = (String) data.get("naziv");
     	String tipPredmeta = (String) data.get("tipPredmeta");
-    	p.setAkronim(akronimPredmeta);
+    	p.setAkronimPredmeta(akronimPredmeta);
     	p.setGodinaStudija(godinaStudijaPredmeta);
-    	p.setNaziv(nazivPredmeta);
+    	p.setNazivPredmeta(nazivPredmeta);
     	p.setTipPredmeta(tipPredmeta);
     	
     	try {
@@ -113,25 +113,25 @@ public class AdminController {
     		
     		for (Rok rok : listaSvihRokova) {
     			PredmetRokPK prPk = new PredmetRokPK(); 
-    			prPk.setPredmetAkronim(p.getAkronim());
+    			prPk.setPredmetAkronim(p.getAkronimPredmeta());
     			prPk.setRokId(rok.getRokId());
     			
     			
     			PredmetRok pr = new PredmetRok(); 
     			pr.setId(prPk);
     			pr.setPredmet(p);
-    			pr.setDatum(dajDatumIspita(rok.getNaziv(), rok.getGodina()));
+    			pr.setDatumPolaganja(dajDatumIspita(rok.getNazivRoka(), rok.getGodina()));
     			pr.setRok(rok);
     			predmetRokSet.add(pr); 
     			predmetRokService.save(pr);
 			}
-    		return "predmetAkronim: " + p.getAkronim(); 
+    		return "predmetAkronim: " + p.getAkronimPredmeta(); 
     	} catch (Exception e) {
     		return "fail: " + e.getMessage(); 
 		}
     }
 
-	private Date dajDatumIspita(String nazivRoka, Long godinaRoka) {
+	private Timestamp dajDatumIspita(String nazivRoka, Long godinaRoka) {
 		Random rn = new Random(); 
 		int sat = 8 + ((ispitRokCount + rn.nextInt(8) + 1) % 8); 
 		int dan = 1; 
@@ -164,7 +164,7 @@ public class AdminController {
 		}
 		Calendar cal = Calendar.getInstance(); 
 		cal.set(godinaRoka.intValue(), mesec, dan, sat, 0);
-		return cal.getTime(); 
+		return new Timestamp(cal.getTimeInMillis()); 
 	}
     
 }

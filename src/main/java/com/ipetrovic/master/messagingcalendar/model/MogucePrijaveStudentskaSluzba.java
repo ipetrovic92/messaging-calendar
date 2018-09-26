@@ -33,7 +33,7 @@ public class MogucePrijaveStudentskaSluzba implements Serializable {
 
 	//bi-directional many-to-one association to Student
 	@ManyToOne
-	@JoinColumn(name="broj_indeksa", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="broj_indeksa_studenta", nullable=false, insertable=false, updatable=false)
 	private Student student;
 
 	public MogucePrijaveStudentskaSluzba() {
