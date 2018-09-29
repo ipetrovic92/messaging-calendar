@@ -39,7 +39,7 @@ public class AdminController {
     @Autowired private RokService rokService; 
     @Autowired private PredmetService predmetService; 
     @Autowired private PredmetRokService predmetRokService; 
-    @Autowired private JmsTemplate jmsTemplate; 
+//    @Autowired private JmsTemplate jmsTemplate; 
     
     @RequestMapping(value = "/userinfo", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public Object dajPodatkeTrenutnogKorisnika(Principal principal) {
@@ -86,7 +86,7 @@ public class AdminController {
     			predmetRokService.save(pr);
 			}
     		System.out.println("SENDING JMS MESSAGE");
-    		jmsTemplate.convertAndSend("rok.dezurstva", r.getRokId().toString());
+//    		jmsTemplate.convertAndSend("rok.dezurstva", r.getRokId().toString());
     		return "rokId: " + r.getRokId(); 
     	} catch (Exception e) {
     		return "fail: " + e.getMessage(); 

@@ -1,7 +1,5 @@
 package com.ipetrovic.master.messagingcalendar.jms;
 
-import java.util.Arrays;
-
 import javax.jms.ConnectionFactory;
 
 import org.apache.activemq.ActiveMQConnectionFactory;
